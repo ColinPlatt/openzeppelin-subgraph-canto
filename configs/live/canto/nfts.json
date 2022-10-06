@@ -1,0 +1,11 @@
+{
+  "output": "generated/live/canto/nfts.",
+  "chain": "canto",
+  "datasources": [
+    { "startBlock": 0, "module": "erc721"  },
+    { "startBlock": 0, "module": "erc1155" }
+  ],
+  "deploy": [
+    { "type": "subgraph-studio", "name": "amxx/nft-canto" }
+  ]
+}
