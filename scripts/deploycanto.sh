@@ -8,5 +8,6 @@ set -xo errexit
   npx graph codegen generated/live/canto/nfts.subgraph.yaml
 
   npx graph create --node http://localhost:8020 canto/nfts --access-token $ACCESS_TOKEN generated/live/canto/nfts.subgraph.yaml
-  npx graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 canto/alto --access-token $ACCESS_TOKEN generated/live/canto/nfts.subgraph.yaml
+  npx graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 canto/nfts --access-token $ACCESS_TOKEN generated/live/canto/nfts.subgraph.yaml
 
+git 
