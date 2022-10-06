@@ -4,7 +4,7 @@ set -xo errexit
 
 # Default is to deploy all live configs
 configs=$@
-: ${configs:=configs/live/canto/*.json}
+: ${configs:=configs/live/**/*.json}
 
 for config in $configs;
 do
