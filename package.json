@@ -26,7 +26,9 @@
     "docs:watch": "npm run docs watch",
     "prepublish": "rimraf artifacts build cache generated",
     "prepare": "bash scripts/prepare.sh",
-    "test": "bash scripts/test.sh"
+    "test": "bash scripts/test.sh",
+    "create":  "npx graph create --node http://localhost:8020 canto/nfts --access-token $ACCESS_TOKEN ~/openzeppelin-subgraph-canto/generated/live/canto/nfts.subgraph.yaml",
+    "deploy": "npx graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 canto/nfts --access-token $ACCESS_TOKEN ~/openzeppelin-subgraph-canto/generated/live/canto/nfts.subgraph.yaml"
   },
   "dependencies": {
     "@amxx/graphprotocol-utils": "^1.1.0",
