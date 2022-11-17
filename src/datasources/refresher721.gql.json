@@ -1,0 +1,39 @@
+[{"name": "ERC721Contract",
+  "immutable": true,
+  "fields": [
+    { "name": "id",                      "type": "Bytes!"                                 },
+    { "name": "tokens",                  "type": "ERC721Token!",    "derived": "contract" }
+  ]
+},{
+  "name": "ERC721Token",
+  "fields": [
+    { "name": "contract",                "type": "ERC721Contract!"                     },
+    { "name": "identifier",              "type": "BigInt!"                             },
+    { "name": "uri",                     "type": "String"                              }
+  ]
+},{
+  "name": "SINGLE_ID",
+  "parent": "Event",
+  "immutable": true,
+  "fields": [
+    { "name": "contract",                "type": "ERC721Contract!" },
+    { "name": "identifier",              "type": "BigInt!"         }
+  ]
+},{
+  "name": "RANGE_ID",
+  "parent": "Event",
+  "immutable": true,
+  "fields": [
+    { "name": "contract",                "type": "ERC721Contract!" },
+    { "name": "identifierStart",         "type": "BigInt!"         },
+    { "name": "identifierEnd",           "type": "BigInt!"         }
+  ]
+},{
+  "name": "MULTI_ID",
+  "parent": "Event",
+  "immutable": true,
+  "fields": [
+    { "name": "contract",                "type": "ERC721Contract!" },
+    { "name": "identifiers",             "type": "[BigInt!]!"      }
+  ]
+}]
