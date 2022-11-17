@@ -31,7 +31,6 @@ export function handleSingle(event: SingleEvent): void {
 	if (contract != null) {
 		let token = fetchERC721Token(contract, event.params.id)
 
-		contract.save()
 		token.save()
 	}
 }
@@ -48,6 +47,5 @@ export function handleRange(event: RangeEvent): void {
 			token.save()
 
 		}
-		contract.save()
 	}
 }
