@@ -1,5 +1,6 @@
 import {
 	Address,
+	BigInt
 } from '@graphprotocol/graph-ts'
 
 import {
@@ -33,5 +34,34 @@ export function handleSingle(event: SingleEvent): void {
 
 		contract.save()
 		token.save()
+	}
+}
+
+export function handleRange(event: RangeEvent): void {
+	let contract = fetchERC721(event.params.collection)
+	if (contract != null) {
+		let start: BigInt = event.params.idStart;
+		let end: BigInt = event.params.idEnd;
+		let step: BigInt = new BigInt(1);
+		for(let i: BigInt = start; i<=end; i.plus(step)) {
+
+			let token = fetchERC721Token(contract, i)
+			token.save()
+
+		}
+		contract.save()
+	}
+}
+
+export function handleMulti(event: MultiEvent): void {
+	let contract = fetchERC721(event.params.collection)
+	if (contract != null) {
+		for(let i: number = 0; i<=event.params.ids.length; i++) {
+
+			let token = fetchERC721Token(contract, event.params.ids[i])
+			token.save()
+
+		}
+		contract.save()
 	}
 }
