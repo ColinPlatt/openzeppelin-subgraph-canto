@@ -41,7 +41,7 @@ export function handleRange(event: RangeEvent): void {
 		let start: BigInt = event.params.idStart;
 		let end: BigInt = event.params.idEnd;
 		let step: BigInt = new BigInt(1);
-		for(let i: BigInt = start; i<=end; i.plus(step)) {
+		for(let i: BigInt = start; i<=end; i = i.plus(step)) {
 
 			let token = fetchERC721Token(contract, i)
 			token.save()
