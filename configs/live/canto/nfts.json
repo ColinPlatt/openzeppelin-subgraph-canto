@@ -2,9 +2,8 @@
   "output": "generated/live/canto/nfts.",
   "chain": "canto",
   "datasources": [
-    { "startBlock": 1650000, "module": "erc721"  },
-    { "startBlock": 1650000, "module": "erc1155" },
-    { "startBlock": 1650000, "module": "refresher721" }
+    { "startBlock": 1000000, "module": "erc721"  },
+    { "startBlock": 1000000, "module": "erc1155" }
   ],
   "deploy": [
     { "type": "subgraph-studio", "name": "amxx/nft-canto" }
