@@ -13,7 +13,7 @@
         - ERC721Contract
       abis:
         - name: NFT_Refresher
-          file: /root/dev/oz-canto/src/datasources/NFT_Refresher.abi.json
+          file: /root/oz-canto/src/datasources/NFT_Refresher.abi.json
       eventHandlers:
         - event: SINGLE_ID(address,uint256)
           handler: handleSingle
