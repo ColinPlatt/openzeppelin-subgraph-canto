@@ -11,4 +11,4 @@ set -xo errexit
   sleep 5
   npx graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 canto/nfts --access-token {$ACCESS_TOKEN} ~/oz-canto/generated/live/canto/nfts.subgraph.yaml
 
-git 
+
