@@ -16,6 +16,9 @@
   "parent": "Event",
   "immutable": true,
   "fields": [
+    { "name": "emitter",                 "type": "Account!"        },
+    { "name": "transaction",             "type": "Transaction!"    },
+    { "name": "timestamp",               "type": "BigInt!"         },
     { "name": "contract",                "type": "ERC721Contract!" },
     { "name": "identifier",              "type": "BigInt!"         }
   ]
@@ -24,6 +27,9 @@
   "parent": "Event",
   "immutable": true,
   "fields": [
+    { "name": "emitter",                 "type": "Account!"        },
+    { "name": "transaction",             "type": "Transaction!"    },
+    { "name": "timestamp",               "type": "BigInt!"         },
     { "name": "contract",                "type": "ERC721Contract!" },
     { "name": "identifierStart",         "type": "BigInt!"         },
     { "name": "identifierEnd",           "type": "BigInt!"         }
@@ -33,6 +39,9 @@
   "parent": "Event",
   "immutable": true,
   "fields": [
+    { "name": "emitter",                 "type": "Account!"        },
+    { "name": "transaction",             "type": "Transaction!"    },
+    { "name": "timestamp",               "type": "BigInt!"         },
     { "name": "contract",                "type": "ERC721Contract!" },
     { "name": "identifiers",             "type": "[BigInt!]!"      }
   ]
