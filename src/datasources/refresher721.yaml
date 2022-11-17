@@ -19,7 +19,4 @@
           handler: handleSingle
         - event: RANGE_ID(address,uint256,uint256)
           handler: handleRange
-        - event: MULTI_ID(address,uint256[])
-          handler: handleMulti
-
       file: {file}

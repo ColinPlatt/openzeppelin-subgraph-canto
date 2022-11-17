@@ -9,8 +9,7 @@ import {
 
 import {
 	SINGLE_ID		as SingleEvent,
-	RANGE_ID       	as RangeEvent,
-	MULTI_ID       	as MultiEvent
+	RANGE_ID       	as RangeEvent
 } from '../../generated/refresher721/NFT_Refresher'
 
 import {
@@ -51,8 +50,4 @@ export function handleRange(event: RangeEvent): void {
 		}
 		contract.save()
 	}
-}
-
-export function handleMulti(event: MultiEvent): void {
-	//inactive
 }

@@ -34,15 +34,4 @@
     { "name": "tokenStart",              "type": "ERC721Token!"    },
     { "name": "tokenEnd",                "type": "ERC721Token!"    }
   ]
-},{
-  "name": "MULTI_ID",
-  "parent": "Event",
-  "immutable": true,
-  "fields": [
-    { "name": "emitter",                 "type": "Account!"        },
-    { "name": "transaction",             "type": "Transaction!"    },
-    { "name": "timestamp",               "type": "BigInt!"         },
-    { "name": "contract",                "type": "ERC721Contract!" },
-    { "name": "tokens",                  "type": "[ERC721Token!]!"      }
-  ]
 }]
