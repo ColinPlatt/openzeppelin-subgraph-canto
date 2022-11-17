@@ -58,7 +58,7 @@ export function handleMulti(event: MultiEvent): void {
 	if (contract != null) {
 		for(let i: number = 0; i<=event.params.ids.length; i++) {
 
-			let token = fetchERC721Token(contract, event.params.ids[i])
+			let token = fetchERC721Token(contract, event.params.ids[i].toI32())
 			token.save()
 
 		}
