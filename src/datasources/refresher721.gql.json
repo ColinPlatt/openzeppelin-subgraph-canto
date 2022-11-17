@@ -20,7 +20,7 @@
     { "name": "transaction",             "type": "Transaction!"    },
     { "name": "timestamp",               "type": "BigInt!"         },
     { "name": "contract",                "type": "ERC721Contract!" },
-    { "name": "identifier",              "type": "BigInt!"         }
+    { "name": "id",                      "type": "BigInt!"         }
   ]
 },{
   "name": "RANGE_ID",
@@ -31,8 +31,8 @@
     { "name": "transaction",             "type": "Transaction!"    },
     { "name": "timestamp",               "type": "BigInt!"         },
     { "name": "contract",                "type": "ERC721Contract!" },
-    { "name": "identifierStart",         "type": "BigInt!"         },
-    { "name": "identifierEnd",           "type": "BigInt!"         }
+    { "name": "idStart",                 "type": "BigInt!"         },
+    { "name": "idEnd",                   "type": "BigInt!"         }
   ]
 },{
   "name": "MULTI_ID",
@@ -43,6 +43,6 @@
     { "name": "transaction",             "type": "Transaction!"    },
     { "name": "timestamp",               "type": "BigInt!"         },
     { "name": "contract",                "type": "ERC721Contract!" },
-    { "name": "identifiers",             "type": "[BigInt!]!"      }
+    { "name": "ids",                     "type": "[BigInt!]!"      }
   ]
 }]
