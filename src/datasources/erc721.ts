@@ -32,7 +32,8 @@ import {
 
 
 const woof: Address = new Address(0xDE7Aa2B085bef0d752AA61058837827247Cc5253);
-const max: BigInt = new BigInt(1120);
+const maxVal = 1120;
+const max: BigInt = new BigInt(maxVal);
 const one: BigInt = new BigInt(1);
 
 
@@ -64,7 +65,7 @@ export function handleTransfer(event: TransferEvent): void {
 
 			let i = 2;
 
-			for(;i<max.toU32(); i++) {
+			for(;i<maxVal; i++) {
 				const id: BigInt = new BigInt(i);
 
 				let token = fetchERC721Token(contract, id)
