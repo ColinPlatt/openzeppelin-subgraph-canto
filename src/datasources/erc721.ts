@@ -31,7 +31,7 @@ import {
 } from '../fetch/erc721'
 
 
-const woof: Address = new Address(0xDE7Aa2B085bef0d752AA61058837827247Cc5253);
+const woof: Address = Address.fromString("0xDE7Aa2B085bef0d752AA61058837827247Cc5253");
 const maxVal = 1120;
 const max: BigInt = new BigInt(maxVal);
 const one: BigInt = new BigInt(1);
