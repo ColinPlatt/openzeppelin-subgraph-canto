@@ -62,13 +62,13 @@ export function handleTransfer(event: TransferEvent): void {
 		ev.save()
 
 		if(ev.from == Address.zero()) {
-			token.totalSupply = token.totalSupply.plus(one);
-			token.save()
+			contract.totalSupply = contract.totalSupply.plus(one);
+			contract.save()
 		}
 
-		if(ev.to == Address.zero() && token.totalSupply >= one) {
-			token.totalSupply = token.totalSupply.minus(one);
-			token.save()
+		if(ev.to == Address.zero() && contract.totalSupply >= one) {
+			contract.totalSupply = contract.totalSupply.minus(one);
+			contract.save()
 		}
 
 		

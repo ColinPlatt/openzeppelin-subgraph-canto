@@ -11,7 +11,6 @@
   ]
 },{
   "name": "ERC721Contract",
-  "immutable": true,
   "fields": [
     { "name": "id",                      "type": "Bytes!"                                 },
     { "name": "asAccount",               "type": "Account!"                               },
@@ -20,7 +19,8 @@
     { "name": "symbol",                  "type": "String"                                 },
     { "name": "tokens",                  "type": "ERC721Token!",    "derived": "contract" },
     { "name": "operators",               "type": "ERC721Operator!", "derived": "contract" },
-    { "name": "transfers",               "type": "ERC721Transfer!", "derived": "contract" }
+    { "name": "transfers",               "type": "ERC721Transfer!", "derived": "contract" },
+    { "name": "totalSupply",             "type": "BigInt!"                                }
   ]
 },{
   "name": "ERC721Token",
@@ -30,8 +30,8 @@
     { "name": "owner",                   "type": "Account!"                            },
     { "name": "approval",                "type": "Account!"                            },
     { "name": "uri",                     "type": "String"                              },
-    { "name": "transfers",               "type": "ERC721Transfer!", "derived": "token" },
-    { "name": "totalSupply",             "type": "BigInt!"                                }
+    { "name": "transfers",               "type": "ERC721Transfer!", "derived": "token" }
+    
   ]
 },{
   "name": "ERC721Operator",
