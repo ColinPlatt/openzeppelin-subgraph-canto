@@ -13,7 +13,7 @@
         - ERC721Contract
       abis:
         - name: IERC721
-          file: {root}/node_modules/@openzeppelin/contracts/build/contracts/IERC721Metadata.json
+          file: {root}/configs/live/canto/IERC721EnumerableMetadata.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval

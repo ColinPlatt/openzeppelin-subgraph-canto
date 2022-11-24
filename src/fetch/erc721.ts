@@ -56,8 +56,10 @@ export function fetchERC721(address: Address): ERC721Contract | null {
 		contract.name             = try_name.reverted   ? '' : try_name.value
 		contract.symbol           = try_symbol.reverted ? '' : try_symbol.value
 		contract.supportsMetadata = supportsInterface(erc721, '5b5e139f') // ERC721Metadata
-		contract.asAccount        = address
-		contract.totalSupply 	  = BigInt.fromI32(0)
+		let isERC721Enumerable 	  = supportsInterface(erc721, '780e9d63') // ERC721Enumerable
+		contract.isEnumerable	  = isERC721Enumerable
+		contract.totalSupply 	  = isERC721Enumerable? BigInt.fromI32(erc721.try_totalSupply()) : BigInt.fromI32(0)
+		contract.asAccount        = address		
 		contract.save()
 
 		let account               = fetchAccount(address)
