@@ -32,7 +32,7 @@ import {
 } from '../fetch/erc721'
 
 
-const woof: ethereum.Event.Address = Address.fromString("0xDE7Aa2B085bef0d752AA61058837827247Cc5253");
+const woof: Address = Address.fromString("0xDE7Aa2B085bef0d752AA61058837827247Cc5253");
 const one: BigInt = BigInt.fromI32(1);
 
 
