@@ -57,7 +57,6 @@ export function fetchERC721(address: Address): ERC721Contract | null {
 		contract.symbol           = try_symbol.reverted ? '' : try_symbol.value
 		contract.supportsMetadata = supportsInterface(erc721, '5b5e139f') // ERC721Metadata
 		contract.asAccount        = address
-		contract.supply	   		  = BigInt.fromI32(0)
 		contract.save()
 
 		let account               = fetchAccount(address)
@@ -73,10 +72,11 @@ export function fetchERC721Token(contract: ERC721Contract, identifier: BigInt): 
 	let token = ERC721Token.load(id)
 
 	if (token == null) {
-		token            = new ERC721Token(id)
-		token.contract   = contract.id
-		token.identifier = identifier
-		token.approval   = fetchAccount(Address.zero()).id
+		token            	= new ERC721Token(id)
+		token.contract   	= contract.id
+		token.identifier 	= identifier
+		token.approval   	= fetchAccount(Address.zero()).id
+		token.totalSupply 	= BigInt.fromI32(0)
 
 		if (contract.supportsMetadata) {
 			let erc721       = IERC721.bind(Address.fromBytes(contract.id))
