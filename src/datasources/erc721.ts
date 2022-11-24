@@ -2,7 +2,8 @@ import {
 	Address,
 	BigInt,
 	Bytes,
-	ethereum
+	ethereum,
+	
 } from '@graphprotocol/graph-ts'
 
 import {
@@ -34,7 +35,7 @@ import {
 const woof: Address = Address.fromString("0xDE7Aa2B085bef0d752AA61058837827247Cc5253");
 const maxVal = 1120;
 const max: BigInt = new BigInt(maxVal);
-const one: BigInt = new BigInt(1);
+const one: BigInt = BigInt.fromI32(1);
 
 
 export function handleTransfer(event: TransferEvent): void {
@@ -60,13 +61,21 @@ export function handleTransfer(event: TransferEvent): void {
 		ev.to          = to.id
 		ev.save()
 
-		// if we are moving ID 1 from the WOOF collection, do a loop all the way up to ID 1120 to update
-		if(event.address == woof && event.params.tokenId == one) {
+		if(ev.from == Address.zero()) {
+			contract.supply = contract.supply.plus(one);
+		}
 
+		if(ev.to == Address.zero() && contract.supply >= one) {
+			contract.supply = contract.supply.minus(one);
+		}
+
+		// if we are moving ID 1 from the WOOF collection, do a loop all the way up to ID 1120 to update
+		if(event.address == woof && token.identifier == one) {
+			
 			let i = 2;
 
-			for(;i<maxVal; i++) {
-				const id: BigInt = new BigInt(i);
+			for(i;i<maxVal; i++) {
+				const id: BigInt = BigInt.fromI32(i);
 
 				let token = fetchERC721Token(contract, id)
 				token.save()

@@ -20,7 +20,8 @@
     { "name": "symbol",                  "type": "String"                                 },
     { "name": "tokens",                  "type": "ERC721Token!",    "derived": "contract" },
     { "name": "operators",               "type": "ERC721Operator!", "derived": "contract" },
-    { "name": "transfers",               "type": "ERC721Transfer!", "derived": "contract" }
+    { "name": "transfers",               "type": "ERC721Transfer!", "derived": "contract" },
+    { "name": "supply",                  "type": "BigInt!"                                }
   ]
 },{
   "name": "ERC721Token",
