@@ -1,5 +1,6 @@
 import {
 	Address,
+	bigInt,
 	BigInt,
 	Bytes,
 } from '@graphprotocol/graph-ts'
@@ -56,6 +57,7 @@ export function fetchERC721(address: Address): ERC721Contract | null {
 		contract.symbol           = try_symbol.reverted ? '' : try_symbol.value
 		contract.supportsMetadata = supportsInterface(erc721, '5b5e139f') // ERC721Metadata
 		contract.asAccount        = address
+		contract.supply	   		  = BigInt.fromI32(0)
 		contract.save()
 
 		let account               = fetchAccount(address)

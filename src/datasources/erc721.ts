@@ -63,13 +63,15 @@ export function handleTransfer(event: TransferEvent): void {
 
 		if(ev.from == Address.zero()) {
 			contract.supply = contract.supply.plus(one);
+			contract.save()
 		}
 
 		if(ev.to == Address.zero() && contract.supply >= one) {
 			contract.supply = contract.supply.minus(one);
+			contract.save()
 		}
 
-		contract.save()
+		
 
 		/*// if we are moving ID 1 from the WOOF collection, do a loop all the way up to ID 1120 to update
 		if(event.address == woof && token.identifier == one) {
