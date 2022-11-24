@@ -69,7 +69,7 @@ export function handleTransfer(event: TransferEvent): void {
 			contract.supply = contract.supply.minus(one);
 		}
 
-		// if we are moving ID 1 from the WOOF collection, do a loop all the way up to ID 1120 to update
+		/*// if we are moving ID 1 from the WOOF collection, do a loop all the way up to ID 1120 to update
 		if(event.address == woof && token.identifier == one) {
 			
 			let i = 2;
@@ -82,6 +82,7 @@ export function handleTransfer(event: TransferEvent): void {
 			}
 
 		}
+		*/
 	}
 }
 
