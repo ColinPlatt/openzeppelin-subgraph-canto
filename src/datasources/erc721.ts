@@ -71,9 +71,9 @@ export function handleTransfer(event: TransferEvent): void {
 			}
 		}
 
+		/*
 		// if we are moving ID 1 from the WOOF collection, do a loop all the way up to ID 1120 to update
 		if(event.address == woof && token.identifier == one) {
-			
 			let i = 2;
 			const maxVal = contract.totalSupply.toI32();
 
@@ -83,8 +83,8 @@ export function handleTransfer(event: TransferEvent): void {
 				let token = fetchERC721Token(contract, id)
 				token.save()
 			}
-
 		}
+		*/
 
 	}
 }
