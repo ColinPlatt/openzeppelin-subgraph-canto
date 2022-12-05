@@ -87,6 +87,12 @@ export function fetchERC721Token(contract: ERC721Contract, identifier: BigInt): 
 		token.uri        = try_tokenURI.reverted ? '' : try_tokenURI.value
 	}
 
+	if (contract.isEnumerable) {
+		let erc721   = IERC721.bind(contract.id)
+		contract.totalSupply = erc721.try_totalSupply().value
+		contract.save()
+	}
+
 	return token as ERC721Token
 }
 
