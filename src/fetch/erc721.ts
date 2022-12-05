@@ -88,7 +88,7 @@ export function fetchERC721Token(contract: ERC721Contract, identifier: BigInt): 
 	}
 
 	if (contract.isEnumerable) {
-		let erc721   = IERC721.bind(contract.id)
+		let erc721   = IERC721.bind(Address.fromBytes(contract.id))
 		contract.totalSupply = erc721.try_totalSupply().value
 		contract.save()
 	}
