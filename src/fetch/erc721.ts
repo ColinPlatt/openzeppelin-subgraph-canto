@@ -167,16 +167,15 @@ export function decodeBase64(uri: string): string {
 }
 
 
-export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | undefined {
+export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | null {
 
+	let erc721metadata = ERC721Metadata.load(token.id)
 	let uri = token.uri
 
 	// if there is no entry just leave
 	if (uri == null) {
-		return
+		return erc721metadata
 	}
-
-	let erc721metadata = ERC721Metadata.load(token.id)
 
 	if (erc721metadata == null) {
 		erc721metadata      	= new ERC721Metadata(token.id)
@@ -250,56 +249,3 @@ export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | undefi
 
 	return erc721metadata;
 }
-
-
-/*
-export function fetchMetadata(uri: string, identifier: string): string | Promise<ERC721Metadata> {
-	// ipfs uri
-	if (uri.indexOf("ipfs://") === 0) {
-		const ipfsUri = uri.includes(".json") && !uri.includes(`/${identifier}.json`)
-			? uri.split("://")[1].replace(`${identifier}.json`, `/${identifier}.json`)
-			: uri.split("://")[1]
-		const fetchUrl = `https://ipfs.io/ipfs/${ipfsUri}`
-		if ((/\.png|\.jpg|\.jpeg|\.gif/).test(fetchUrl)) return fetchUrl
-		return fetch(fetchUrl)
-			.then(res => res.json())
-			.then(json => ({
-				...json,
-				image: `https://ipfs.io/ipfs/${(json.imagepath || json.image).split("://")[1]}`
-			}))
-	}
-
-	// pinata
-	if (uri.includes("pinata.cloud")) {
-		if ((/\.png|\.jpg|\.jpeg|\.gif/).test(uri)) return uri
-		return fetch(
-			uri.includes(".json")
-				? uri
-				: `https://ipfs.io/ipfs/${uri.split("/ipfs/")[1]}`
-			)
-			.then(res => res.json())
-			.then(json => ({
-				...json,
-				image: json.image.includes("pinata.cloud")
-					? json.image
-					: fetchMetadata(json.image, identifier)
-			}))
-	}
-
-	// ipfs nftstorage
-	if (uri.includes("nftstorage.link") || uri.includes(".json")) {
-		return fetch(uri).then(res => res.json())
-	}
-
-	// base64 json
-	if (uri.includes("application/json;base64")) {
-		const json = JSON.parse(window.atob(uri.split("base64,")[1]))
-		if (json && json.image) return {
-			...json,
-			image: fetchMetadata(json.image, identifier)
-		}
-	}
-
-	return uri
-}
-*/
