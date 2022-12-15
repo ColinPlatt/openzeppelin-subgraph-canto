@@ -145,13 +145,15 @@ enum dataType {
 	unsupported
 }
 
-function determineData(uri: string): dataType {
-	if (uri.startsWith('data:application/json;base64')) 			return dataType.base64;
-	if (uri.startsWith('{"name": '))								return dataType.onchainUnencoded;
-	if (uri.includes('ipfs')) 										return dataType.ipfs;
+function determineData(uri: string | null): dataType {
+	if(uri) {
+		if (uri.startsWith('data:application/json;base64')) 			return dataType.base64;
+		if (uri.startsWith('{"name": '))								return dataType.onchainUnencoded;
+		if (uri.includes('ipfs')) 										return dataType.ipfs;
 
-	//if (uri.startsWith('ar://')) 									return dataType.arweave;
-	//if (uri.startsWith('http://') || uri.startsWith('https://')) 	return dataType.centralized;
+		//if (uri.startsWith('ar://')) 									return dataType.arweave;
+		//if (uri.startsWith('http://') || uri.startsWith('https://')) 	return dataType.centralized;
+	}
 
 	return dataType.unsupported as dataType;
 
@@ -169,38 +171,40 @@ function decodeBase64(uri: string): string {
 	return Buffer.from(uri.split("base64,")[1], 'base64').toString('ascii');
 }
 
-function formatMetadata(uri: string, metadataType: dataType): TypedMap<string, JSONValue> | null {
-	let formattedMetadata: object | null
+function formatMetadata(uri: string | null, metadataType: dataType): TypedMap<string, JSONValue> | null {
+	let formattedMetadata: TypedMap<string, JSONValue> | null
 	let response: Bytes | null
 
-	// get the metadata string into a common format
-	switch(metadataType) 
-	{
-		case dataType.ipfs:
-			uri = correctJSON(uri)
-			response = ipfs.cat(uri)
-			if (response) {
-				formattedMetadata = json.fromBytes(response).toObject()
-			}
-			break;
-		/*case dataType.arweave:
-			uri = correctJSON(uri)
-			break;
-		case dataType.centralized:
-			uri = correctJSON(uri)
-			response = http.get(uri)
-			if (response) {
-				formattedMetadata = json.fromBytes(response).toObject()
-			}
-			break;
-		case dataType.base64:
-			formattedMetadata = decodeBase64(uri)
-			break;
-		case dataType.onchainUnencoded:
-			formattedMetadata = uri
-			break;*/
-		default:
-			return null;
+	if(uri){
+		// get the metadata string into a common format
+		switch(metadataType) 
+		{
+			case dataType.ipfs:
+				uri = correctJSON(uri)
+				response = ipfs.cat(uri)
+				if (response) {
+					formattedMetadata = json.fromBytes(response).toObject()
+				}
+				break;
+			/*case dataType.arweave:
+				uri = correctJSON(uri)
+				break;
+			case dataType.centralized:
+				uri = correctJSON(uri)
+				response = http.get(uri)
+				if (response) {
+					formattedMetadata = json.fromBytes(response).toObject()
+				}
+				break;
+			case dataType.base64:
+				formattedMetadata = decodeBase64(uri)
+				break;
+			case dataType.onchainUnencoded:
+				formattedMetadata = uri
+				break;*/
+			default:
+				return null;
+		}
 	}
 
 	return null
@@ -225,7 +229,7 @@ export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | null {
 
 	let metadataType: dataType = determineData(uri);
 
-	erc721metadata.metadataType = Object(metadataType).values().toI32()
+	erc721metadata.metadataIndex = Object(metadataType).values().toI32()
 	
 	let formattedMetadata = formatMetadata(uri, metadataType)
 
