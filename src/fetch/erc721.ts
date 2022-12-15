@@ -215,7 +215,7 @@ export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | null {
 			formattedMetadata = uri
 			break;*/
 		default:
-			return;
+			return erc721metadata;
 	}
 
 	if (formattedMetadata) {
@@ -232,7 +232,6 @@ export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | null {
 		const attributes = formattedMetadata.get('attributes')
 
 		if(attributes) {
-			let attrs = Array<ERC721Attribute>;
 			let nextAttr: ERC721Attribute = new ERC721Attribute(erc721metadata.id);
 			const attributeData = attributes.toObject();
 			for (let i = 0; i<attributeData.length; i++) {
