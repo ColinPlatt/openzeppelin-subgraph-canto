@@ -5,7 +5,8 @@ import {
 	Bytes,
 	ipfs,
 	json,
-	JSONValue
+	JSONValue,
+	TypedMap
 } from '@graphprotocol/graph-ts'
 
 import {
@@ -144,7 +145,7 @@ enum dataType {
 	unsupported
 }
 
-export function determineData(uri: string): dataType {
+function determineData(uri: string): dataType {
 	if (uri.startsWith('data:application/json;base64')) 			return dataType.base64;
 	if (uri.startsWith('{"name": '))								return dataType.onchainUnencoded;
 	if (uri.includes('ipfs')) 										return dataType.ipfs;
@@ -152,11 +153,11 @@ export function determineData(uri: string): dataType {
 	//if (uri.startsWith('ar://')) 									return dataType.arweave;
 	//if (uri.startsWith('http://') || uri.startsWith('https://')) 	return dataType.centralized;
 
-	return dataType.unsupported;
+	return dataType.unsupported as dataType;
 
 }
 
-export function correctJSON(uri: string): string {
+function correctJSON(uri: string): string {
 	if (uri.endsWith('.json')) {
 		return uri;
 	} else {
@@ -164,32 +165,14 @@ export function correctJSON(uri: string): string {
 	}
 }
 
-export function decodeBase64(uri: string): string {
+function decodeBase64(uri: string): string {
 	return Buffer.from(uri.split("base64,")[1], 'base64').toString('ascii');
 }
 
+function formatMetadata(uri: string, metadataType: dataType): TypedMap<string, JSONValue> | null {
+	let formattedMetadata: object | null
+	let response: Bytes | null
 
-export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | null {
-
-	let erc721metadata = ERC721Metadata.load(token.id)
-	let uri = token.uri
-
-	// if there is no entry just leave
-	if (uri == null) {
-		return erc721metadata
-	}
-
-	if (erc721metadata == null) {
-		erc721metadata      	= new ERC721Metadata(token.id)
-		erc721metadata.token 	= token.id
-	}
-
-	let metadataType: dataType = determineData(uri);
-
-	erc721metadata.metadataType = Object(metadataType).values()
-	
-	let formattedMetadata: any
-	let response: any
 	// get the metadata string into a common format
 	switch(metadataType) 
 	{
@@ -217,8 +200,34 @@ export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | null {
 			formattedMetadata = uri
 			break;*/
 		default:
-			return erc721metadata;
+			return null;
 	}
+
+	return null
+
+}
+
+
+export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | null {
+
+	let erc721metadata = ERC721Metadata.load(token.id)
+	let uri = token.uri
+
+	// if there is no entry just leave
+	if (uri == null) {
+		return erc721metadata
+	}
+
+	if (erc721metadata == null) {
+		erc721metadata      	= new ERC721Metadata(token.id)
+		erc721metadata.token 	= token.id
+	}
+
+	let metadataType: dataType = determineData(uri);
+
+	erc721metadata.metadataType = Object(metadataType).values().toI32()
+	
+	let formattedMetadata = formatMetadata(uri, metadataType)
 
 	if (formattedMetadata) {
 		const image = formattedMetadata.get('image')
@@ -236,10 +245,10 @@ export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | null {
 		if(attributes) {
 			let nextAttr: ERC721Attribute = new ERC721Attribute(erc721metadata.id);
 			const attributeData = attributes.toObject();
-			for (let i = 0; i<attributeData.length; i++) {
+			for (let i = 0; i<attributeData.entries.length; i++) {
 				nextAttr.metadata = erc721metadata.id;
-				nextAttr.trait_type = attributeData[i].get('trait_type');
-				nextAttr.value = attributeData[i].get('value');
+				nextAttr.trait_type = attributeData.entries[i].key.toString()
+				nextAttr.value = attributeData.entries[i].value.toString()
 				nextAttr.save()
 			}
 		}
