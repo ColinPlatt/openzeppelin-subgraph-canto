@@ -59,7 +59,7 @@
   "name": "ERC721Metadata",
   "fields": [
     { "name": "token",                    "type": "ERC721Token!"                            },
-    { "name": "metadataIndex",            "type": "Int!"                                    },
+    { "name": "metadataIndex",            "type": "String!"                                 },
     { "name": "name",                     "type": "String!"                                 },
     { "name": "description",              "type": "String!"                                 },
     { "name": "image",                    "type": "String!"                                 },

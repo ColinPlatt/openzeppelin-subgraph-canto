@@ -229,7 +229,7 @@ export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | null {
 
 	let metadataType: dataType = determineData(uri);
 
-	erc721metadata.metadataIndex = metadataType.valueOf()
+	erc721metadata.metadataIndex = "ipfs" //fix this later
 	
 	let formattedMetadata = formatMetadata(uri, metadataType)
 
