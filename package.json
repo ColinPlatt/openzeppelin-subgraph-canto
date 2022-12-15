@@ -25,18 +25,20 @@
     "docs": "oz-docs",
     "docs:watch": "npm run docs watch",
     "prepublish": "rimraf artifacts build cache generated",
-    "prepare": "bash scripts/prepare.sh",
     "test": "bash scripts/test.sh",
-    "create":  "npx graph create --node http://localhost:8020 canto/nfts_totalSupply --access-token $ACCESS_TOKEN ~/openzeppelin-subgraph-canto/generated/live/canto/nfts.subgraph.yaml",
+    "create": "npx graph create --node http://localhost:8020 canto/nfts_totalSupply --access-token $ACCESS_TOKEN ~/openzeppelin-subgraph-canto/generated/live/canto/nfts.subgraph.yaml",
     "deploy": "npx graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 canto/nfts_totalSupply --access-token $ACCESS_TOKEN ~/openzeppelin-subgraph-canto/generated/live/canto/nfts.subgraph.yaml"
   },
   "dependencies": {
     "@amxx/graphprotocol-utils": "^1.1.0",
-    "@openzeppelin/contracts": "^4.6.0"
+    "@openzeppelin/contracts": "^4.6.0",
+    "@types/node": "^18.11.15",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
   },
   "devDependencies": {
     "@graphprotocol/graph-cli": "^0.29.2",
-    "@graphprotocol/graph-ts": "^0.26.0",
+    "@graphprotocol/graph-ts": "0.26.0",
     "@openzeppelin/docs-utils": "github:OpenZeppelin/docs-preview-script"
   }
 }

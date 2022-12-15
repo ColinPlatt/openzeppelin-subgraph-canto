@@ -3,6 +3,9 @@ import {
 	bigInt,
 	BigInt,
 	Bytes,
+	ipfs,
+	json,
+	JSONValue
 } from '@graphprotocol/graph-ts'
 
 import {
@@ -10,6 +13,8 @@ import {
 	ERC721Contract,
 	ERC721Token,
 	ERC721Operator,
+	ERC721Metadata,
+	ERC721Attribute
 } from '../../generated/schema'
 
 import {
@@ -24,12 +29,14 @@ import {
 	supportsInterface,
 } from './erc165'
 
+
 export function fetchERC721(address: Address): ERC721Contract | null {
 	let erc721   = IERC721.bind(address)
 
 	// Try load entry
 	let contract = ERC721Contract.load(address)
 	if (contract != null) {
+		fetchERC721Supply(address)
 		return contract
 	}
 
@@ -70,6 +77,22 @@ export function fetchERC721(address: Address): ERC721Contract | null {
 	return contract
 }
 
+function fetchERC721Supply(address: Address): ERC721Contract | null {
+	let erc721   = IERC721.bind(address)
+
+	// Try load entry
+	let contract = ERC721Contract.load(address)
+	if (contract != null) {
+		if (contract.isEnumerable) {
+			contract.totalSupply = erc721.try_totalSupply().value
+			contract.save()
+		}
+		return contract
+	}
+
+	return contract
+}
+
 export function fetchERC721Token(contract: ERC721Contract, identifier: BigInt): ERC721Token {
 	let id = contract.id.toHex().concat('/').concat(identifier.toHex())
 	let token = ERC721Token.load(id)
@@ -85,12 +108,6 @@ export function fetchERC721Token(contract: ERC721Contract, identifier: BigInt): 
 		let erc721       = IERC721.bind(Address.fromBytes(contract.id))
 		let try_tokenURI = erc721.try_tokenURI(identifier)
 		token.uri        = try_tokenURI.reverted ? '' : try_tokenURI.value
-	}
-
-	if (contract.isEnumerable) {
-		let erc721   = IERC721.bind(Address.fromBytes(contract.id))
-		contract.totalSupply = erc721.try_totalSupply().value
-		contract.save()
 	}
 
 	return token as ERC721Token
@@ -109,3 +126,180 @@ export function fetchERC721Operator(contract: ERC721Contract, owner: Account, op
 
 	return op as ERC721Operator
 }
+
+// need to be able to handle :
+// base64
+// ipfs (with/without JSON)
+// ar
+// centralized
+
+enum dataType {
+	base64 				= "base64",
+	onchainUnencoded 	= "unencoded",
+	ipfs 				= "ipfs",
+	arweave 			= "ar",
+	centralized 		= "centralized",
+	unsupported 		= "unsupported"
+}
+
+export function determineData(uri: string): dataType {
+	if (uri.startsWith('data:application/json;base64')) 			return dataType.base64;
+	if (uri.startsWith('{"name": '))								return dataType.onchainUnencoded;
+	if (uri.includes('ipfs')) 										return dataType.ipfs;
+
+	//if (uri.startsWith('ar://')) 									return dataType.arweave;
+	//if (uri.startsWith('http://') || uri.startsWith('https://')) 	return dataType.centralized;
+
+	return dataType.unsupported;
+
+}
+
+export function correctJSON(uri: string): string {
+	if (uri.endsWith('.json')) {
+		return uri;
+	} else {
+		return uri + ".json";
+	}
+}
+
+export function decodeBase64(uri: string): string {
+	return Buffer.from(uri.split("base64,")[1], 'base64').toString('ascii');
+}
+
+
+export function fetchERC721Metadata(token: ERC721Token): ERC721Metadata | undefined {
+
+	let uri = token.uri
+
+	// if there is no entry just leave
+	if (uri == null) {
+		return
+	}
+
+	let erc721metadata = ERC721Metadata.load(token.id)
+
+	if (erc721metadata == null) {
+		erc721metadata      	= new ERC721Metadata(token.id)
+		erc721metadata.token 	= token.id
+	}
+
+	let metadataType: dataType = determineData(uri);
+
+	erc721metadata.metadataType = Object(metadataType).values()
+	
+	let formattedMetadata: any
+	let response: any
+	// get the metadata string into a common format
+	switch(metadataType) 
+	{
+		case dataType.ipfs:
+			uri = correctJSON(uri)
+			response = ipfs.cat(uri)
+			if (response) {
+				formattedMetadata = json.fromBytes(response).toObject()
+			}
+			break;
+		/*case dataType.arweave:
+			uri = correctJSON(uri)
+			break;
+		case dataType.centralized:
+			uri = correctJSON(uri)
+			response = http.get(uri)
+			if (response) {
+				formattedMetadata = json.fromBytes(response).toObject()
+			}
+			break;
+		case dataType.base64:
+			formattedMetadata = decodeBase64(uri)
+			break;
+		case dataType.onchainUnencoded:
+			formattedMetadata = uri
+			break;*/
+		default:
+			return;
+	}
+
+	if (formattedMetadata) {
+		const image = formattedMetadata.get('image')
+        const name = formattedMetadata.get('name')
+        const description = formattedMetadata.get('description')
+        const externalURL = formattedMetadata.get('external_url')
+
+		erc721metadata.name = name? name.toString(): ''
+		erc721metadata.image = image? image.toString(): ''
+		erc721metadata.external_uri = externalURL? externalURL.toString(): ''
+		erc721metadata.description = description? description.toString(): ''
+
+		const attributes = formattedMetadata.get('attributes')
+
+		if(attributes) {
+			let attrs = Array<ERC721Attribute>;
+			let nextAttr: ERC721Attribute = new ERC721Attribute(erc721metadata.id);
+			const attributeData = attributes.toObject();
+			for (let i = 0; i<attributeData.length; i++) {
+				nextAttr.metadata = erc721metadata.id;
+				nextAttr.trait_type = attributeData[i].get('trait_type');
+				nextAttr.value = attributeData[i].get('value');
+				nextAttr.save()
+			}
+		}
+
+	}
+
+	erc721metadata.save()
+
+	return erc721metadata;
+}
+
+
+/*
+export function fetchMetadata(uri: string, identifier: string): string | Promise<ERC721Metadata> {
+	// ipfs uri
+	if (uri.indexOf("ipfs://") === 0) {
+		const ipfsUri = uri.includes(".json") && !uri.includes(`/${identifier}.json`)
+			? uri.split("://")[1].replace(`${identifier}.json`, `/${identifier}.json`)
+			: uri.split("://")[1]
+		const fetchUrl = `https://ipfs.io/ipfs/${ipfsUri}`
+		if ((/\.png|\.jpg|\.jpeg|\.gif/).test(fetchUrl)) return fetchUrl
+		return fetch(fetchUrl)
+			.then(res => res.json())
+			.then(json => ({
+				...json,
+				image: `https://ipfs.io/ipfs/${(json.imagepath || json.image).split("://")[1]}`
+			}))
+	}
+
+	// pinata
+	if (uri.includes("pinata.cloud")) {
+		if ((/\.png|\.jpg|\.jpeg|\.gif/).test(uri)) return uri
+		return fetch(
+			uri.includes(".json")
+				? uri
+				: `https://ipfs.io/ipfs/${uri.split("/ipfs/")[1]}`
+			)
+			.then(res => res.json())
+			.then(json => ({
+				...json,
+				image: json.image.includes("pinata.cloud")
+					? json.image
+					: fetchMetadata(json.image, identifier)
+			}))
+	}
+
+	// ipfs nftstorage
+	if (uri.includes("nftstorage.link") || uri.includes(".json")) {
+		return fetch(uri).then(res => res.json())
+	}
+
+	// base64 json
+	if (uri.includes("application/json;base64")) {
+		const json = JSON.parse(window.atob(uri.split("base64,")[1]))
+		if (json && json.image) return {
+			...json,
+			image: fetchMetadata(json.image, identifier)
+		}
+	}
+
+	return uri
+}
+*/
