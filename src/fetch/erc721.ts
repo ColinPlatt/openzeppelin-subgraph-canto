@@ -134,12 +134,12 @@ export function fetchERC721Operator(contract: ERC721Contract, owner: Account, op
 // centralized
 
 enum dataType {
-	base64 				= "base64",
-	onchainUnencoded 	= "unencoded",
-	ipfs 				= "ipfs",
-	arweave 			= "ar",
-	centralized 		= "centralized",
-	unsupported 		= "unsupported"
+	base64,
+	onchainUnencoded,
+	ipfs,
+	arweave,
+	centralized,
+	unsupported
 }
 
 export function determineData(uri: string): dataType {
