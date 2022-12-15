@@ -110,6 +110,8 @@ export function fetchERC721Token(contract: ERC721Contract, identifier: BigInt): 
 		token.uri        = try_tokenURI.reverted ? '' : try_tokenURI.value
 	}
 
+	fetchERC721Metadata(token)
+
 	return token as ERC721Token
 }
 
